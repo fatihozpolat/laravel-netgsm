@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Fatihozpolat\Netgsm\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class NetgsmCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-netgsm';
 
     public $description = 'My command';
 
