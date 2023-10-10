@@ -12,22 +12,23 @@ class NetgsmChannel
 {
     /**
      * NetgsmChannel constructor.
-     * @param object $notifiable
-     * @param Notification $notification
-     * @return array|null
+     *
      * @throws GuzzleException
      * @throws Exception
      */
     public function send(object $notifiable, Notification $notification): ?array
     {
-        if (!($to = $notifiable->routeNotificationFor('netgsm')))
+        if (! ($to = $notifiable->routeNotificationFor('netgsm'))) {
             return null;
+        }
 
-        if (!method_exists($notification, 'toNetgsm'))
+        if (! method_exists($notification, 'toNetgsm')) {
             throw new Exception('toNetgsm method not found.');
+        }
 
-        if (!($message = $notification->toNetgsm($notifiable)) instanceof NetgsmMessage)
+        if (! ($message = $notification->toNetgsm($notifiable)) instanceof NetgsmMessage) {
             throw new Exception('toNetgsm method should return NetgsmMessage instance.');
+        }
 
         return (new Netgsm())->sendSms([$to], $message->message);
     }
