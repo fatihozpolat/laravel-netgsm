@@ -2,9 +2,9 @@
 
 namespace Fatihozpolat\Netgsm\Tests;
 
+use Fatihozpolat\Netgsm\NetgsmServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Fatihozpolat\Netgsm\NetgsmServiceProvider;
 
 class TestCase extends Orchestra
 {
