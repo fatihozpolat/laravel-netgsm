@@ -2,9 +2,9 @@
 
 namespace Fatihozpolat\Netgsm;
 
+use Fatihozpolat\Netgsm\Commands\NetgsmCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Fatihozpolat\Netgsm\Commands\NetgsmCommand;
 
 class NetgsmServiceProvider extends PackageServiceProvider
 {
