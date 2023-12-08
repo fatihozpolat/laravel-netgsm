@@ -39,12 +39,12 @@ class Netgsm
     /**
      * Kuyruğa yeni numara eklemek için kullanılır.
      *
-     * @param  string  $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
-     * @param  string  $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
+     * @param string $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
+     * @param string|array $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara ya da numaralar. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
      *
      * @throws GuzzleException
      */
-    public function queueAdd(string $queue, string $no): array
+    public function queueAdd(string $queue, string|array $no): array
     {
         return $this->queue(config('netgsm.tenant'), $queue, $no);
     }
@@ -52,12 +52,12 @@ class Netgsm
     /**
      * Kuyruktan numara çıkarmak için kullanılır.
      *
-     * @param  string  $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
-     * @param  string  $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
+     * @param string $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
+     * @param string|array $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
      *
      * @throws GuzzleException
      */
-    public function queueDel(string $queue, string $no): array
+    public function queueDel(string $queue, string|array $no): array
     {
         return $this->queue(config('netgsm.tenant'), $queue, $no, 'queuedelnumber');
     }
@@ -67,25 +67,74 @@ class Netgsm
      *
      * @link https://www.netgsm.com.tr/netsantraldokuman/#kuyru%C4%9Fa-d%C4%B1%C5%9F-numara-ekleme%C3%A7%C4%B1karma Kuyruğa Dış Numara Ekleme/Çıkarma
      *
-     * @param  string  $tenant Santral numarası. Zorunlu parametre
-     * @param  string  $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
-     * @param  string  $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
-     * @param  string  $command Numara ekleme işlemi için queueaddnumber , listeden numara çıkarmak için queuedelnumber gönderebilirsiniz. Zorunlu parametre
-     * @param  int  $penalty Çağrıların numaralara dağıtımı sırasındaki önceliği belirler.Düşük değerler yüksek önceliğe sahiptir.Birden fazla numara aynı önceliğe sahip olabilir.Dahili numaralarda ve harici numaralarda belirlemiş olduğunuz öncelikler birbirini etkilemektedir. 1-10 arası değer alabilir. Zorunlu parametre
+     * @param string $tenant Santral numarası. Zorunlu parametre
+     * @param string $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
+     * @param string|array $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara ya da numalar. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
+     * @param string $command Numara ekleme işlemi için queueaddnumber , listeden numara çıkarmak için queuedelnumber gönderebilirsiniz. Zorunlu parametre
+     * @param int $penalty Çağrıların numaralara dağıtımı sırasındaki önceliği belirler.Düşük değerler yüksek önceliğe sahiptir.Birden fazla numara aynı önceliğe sahip olabilir.Dahili numaralarda ve harici numaralarda belirlemiş olduğunuz öncelikler birbirini etkilemektedir. 1-10 arası değer alabilir. Zorunlu parametre
      *
      * @throws GuzzleException
      */
-    private function queue(string $tenant, string $queue, string $no, string $command = 'queueaddnumber', int $penalty = 1): array
+    private function queue(string $tenant, string $queue, string|array $no, string $command = 'queueaddnumber', int $penalty = 1): array
     {
+        $payload = [
+            'username' => $this->username,
+            'password' => $this->password,
+            'command' => $command,
+            'tenant' => $tenant,
+            'queue' => $queue,
+        ];
+
+        if (is_array($no)) {
+            $payload['numbers'] = collect($no)->map(function ($item) use ($penalty) {
+                if (is_array($item) && !isset($item['no']))
+                    throw new Exception('Netgsm Queue Error: no param is required');
+
+                return [
+                    'no' => $item['no'] ?? $item,
+                    'penalty' => $item['penalty'] ?? $penalty,
+                ];
+            })->toArray();
+        } else {
+            $payload['no'] = $no;
+            $payload['penalty'] = $penalty;
+        }
+
         $res = $this->client->post('netsantral/queue', [
-            'json' => [
+            'json' => $payload,
+        ]);
+
+        $res = $res->getBody()->getContents();
+
+        return json_decode($res, true);
+    }
+
+    /**
+     * Verilen Tenant ve Queue bilgilerine göre, kuyruktaki numaraların durumlarını sorgulayabilirsiniz.
+     *
+     * @link https://www.netgsm.com.tr/netsantraldokuman/#kuyruk-durum-sorgulama Kuyruk Durum Sorgulama
+     * @param string $tenant
+     * @param string $queue
+     * @return array
+     * @throws GuzzleException
+     */
+    public function queueStats(string $tenant, string $queue): array
+    {
+        $customClient = new Client([
+            'base_uri' => 'http://crmsntrl.netgsm.com.tr:9111/',
+            'verify' => false,
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $res = $customClient->get($tenant . '/' . 'queuestats', [
+            'query' => [
                 'username' => $this->username,
                 'password' => $this->password,
-                'command' => $command,
-                'tenant' => $tenant,
                 'queue' => $queue,
-                'no' => $no,
-                'penalty' => $penalty,
+                'crm_id' => 1,
             ],
         ]);
 
@@ -99,8 +148,8 @@ class Netgsm
      *
      * @link https://www.netgsm.com.tr/dokuman/#http-post-sms-g%C3%B6nderme HTTP Post ile SMS Gönderme
      *
-     * @param  mixed  $phones Dizi ya da string olarak gönderilebilir. başında 0 olmadan 10 haneli olmalıdır.
-     * @param  string  $message SMS içeriği
+     * @param mixed $phones Dizi ya da string olarak gönderilebilir. başında 0 olmadan 10 haneli olmalıdır.
+     * @param string $message SMS içeriği
      *
      * @throws GuzzleException
      */
@@ -158,7 +207,7 @@ class Netgsm
         $data = explode(' ', $res);
 
         if (count($data) !== 7) {
-            throw new Exception('Netgsm Report Error: '.$res);
+            throw new Exception('Netgsm Report Error: ' . $res);
         }
 
         return [
@@ -166,7 +215,7 @@ class Netgsm
             'status' => $this->smsStatus($data[1]),
             'operator' => $this->smsOperator($data[2]),
             'message_length' => $data[3],
-            'sent_at' => Carbon::parse($data[4].' '.$data[5])->toDateTimeString(),
+            'sent_at' => Carbon::parse($data[4] . ' ' . $data[5])->toDateTimeString(),
             'error' => $this->smsError($data[6]),
         ];
     }
