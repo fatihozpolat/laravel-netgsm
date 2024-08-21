@@ -30,6 +30,6 @@ class NetgsmChannel
             throw new Exception('toNetgsm method should return NetgsmMessage instance.');
         }
 
-        return (new Netgsm())->sendSms([$to], $message->message);
+        return (new Netgsm)->sendSms([$to], $message->message);
     }
 }

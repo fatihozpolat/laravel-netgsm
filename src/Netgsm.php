@@ -39,8 +39,8 @@ class Netgsm
     /**
      * Kuyruğa yeni numara eklemek için kullanılır.
      *
-     * @param  string  $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
-     * @param  string|array  $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara ya da numaralar. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
+     * @param  string  $queue  Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
+     * @param  string|array  $no  Kuyruğa eklenecek ya da kuruktan çıkarılacak numara ya da numaralar. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
      *
      * @throws GuzzleException
      */
@@ -52,8 +52,8 @@ class Netgsm
     /**
      * Kuyruktan numara çıkarmak için kullanılır.
      *
-     * @param  string  $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
-     * @param  string|array  $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
+     * @param  string  $queue  Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
+     * @param  string|array  $no  Kuyruğa eklenecek ya da kuruktan çıkarılacak numara. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
      *
      * @throws GuzzleException
      */
@@ -67,11 +67,11 @@ class Netgsm
      *
      * @link https://www.netgsm.com.tr/netsantraldokuman/#kuyru%C4%9Fa-d%C4%B1%C5%9F-numara-ekleme%C3%A7%C4%B1karma Kuyruğa Dış Numara Ekleme/Çıkarma
      *
-     * @param  string  $tenant Santral numarası. Zorunlu parametre
-     * @param  string  $queue Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
-     * @param  string|array  $no Kuyruğa eklenecek ya da kuruktan çıkarılacak numara ya da numalar. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
-     * @param  string  $command Numara ekleme işlemi için queueaddnumber , listeden numara çıkarmak için queuedelnumber gönderebilirsiniz. Zorunlu parametre
-     * @param  int  $penalty Çağrıların numaralara dağıtımı sırasındaki önceliği belirler.Düşük değerler yüksek önceliğe sahiptir.Birden fazla numara aynı önceliğe sahip olabilir.Dahili numaralarda ve harici numaralarda belirlemiş olduğunuz öncelikler birbirini etkilemektedir. 1-10 arası değer alabilir. Zorunlu parametre
+     * @param  string  $tenant  Santral numarası. Zorunlu parametre
+     * @param  string  $queue  Santralinizde tanımlı olan kuyruk(departman) bilgisi. (85030XXXXX-queue-kuyrukismi formatında gönderilmeli) Zorunlu parametre
+     * @param  string|array  $no  Kuyruğa eklenecek ya da kuruktan çıkarılacak numara ya da numalar. 5xxxxxxxxx, 312xxxxxxx formatında gönderilmeli. Zorunlu parametre
+     * @param  string  $command  Numara ekleme işlemi için queueaddnumber , listeden numara çıkarmak için queuedelnumber gönderebilirsiniz. Zorunlu parametre
+     * @param  int  $penalty  Çağrıların numaralara dağıtımı sırasındaki önceliği belirler.Düşük değerler yüksek önceliğe sahiptir.Birden fazla numara aynı önceliğe sahip olabilir.Dahili numaralarda ve harici numaralarda belirlemiş olduğunuz öncelikler birbirini etkilemektedir. 1-10 arası değer alabilir. Zorunlu parametre
      *
      * @throws GuzzleException
      */
@@ -147,8 +147,8 @@ class Netgsm
      *
      * @link https://www.netgsm.com.tr/dokuman/#http-post-sms-g%C3%B6nderme HTTP Post ile SMS Gönderme
      *
-     * @param  mixed  $phones Dizi ya da string olarak gönderilebilir. başında 0 olmadan 10 haneli olmalıdır.
-     * @param  string  $message SMS içeriği
+     * @param  mixed  $phones  Dizi ya da string olarak gönderilebilir. başında 0 olmadan 10 haneli olmalıdır.
+     * @param  string  $message  SMS içeriği
      *
      * @throws GuzzleException
      */
