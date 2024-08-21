@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-netgsm` will be documented in this file.
 
+## 2.0.1 - 2024-08-21
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.0.0 to 2.1.0 by @dependabot in https://github.com/fatihozpolat/laravel-netgsm/pull/8
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/fatihozpolat/laravel-netgsm/pull/9
+
+**Full Changelog**: https://github.com/fatihozpolat/laravel-netgsm/compare/2.0.0...2.0.1
+
 ## 2.0.0 - 2024-04-15
 
 ### What's Changed
