@@ -203,7 +203,7 @@ class Netgsm
         $res = $res->getBody()->getContents();
 
         $res = rtrim($res, '<br>');
-        $data = explode(' ', $res);
+        $data = explode(' ', trim($res));
 
         if (count($data) !== 7) {
             throw new Exception('Netgsm Report Error: '.$res);
